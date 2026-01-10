@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Automático</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+        }
+        #status { 
+            font-size: 24px; 
+            margin: 50px 0;
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        #coords { 
+            font-size: 22px; 
+            margin: 20px 0; 
+        }
+        #map { 
+            height: 350px; 
+            width: 95%; 
+            border: 2px solid #0066cc; 
+            border-radius: 15px; 
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        button { 
+            padding: 15px 30px; 
+            font-size: 20px; 
+            background: #ff4444; 
+            color: white; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,68,68,0.4);
+        }
+        button:hover { background: #cc0000; }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+    <div id="status">Esperando permiso GPS...</div>
+    <div id="coords" style="display:none;">
+        <h2>📍 Tu Ubicación Exacta</h2>
+        <p>🏠 Lat: <span id="lat">-</span> | Lon: <span id="lon">-</span></p>
+        <p>📏 Precisión: <span id="prec">-</span>m</p>
+    </div>
+    <div id="map" style="display:none;"></div>
+    <button onclick="stopTracking()">⏹️ Detener GPS</button>
+
+    <script>
+        let watchId = null;
+        const status = document.getElementById('status');
+        const coords = document.getElementById('coords');
+        const mapDiv = document.getElementById('map');
+
+        // INICIA AUTOMÁTICAMENTE al cargar la página
+        window.onload = function() {
+            status.textContent = '🚀 Solicitando acceso GPS...';
+            if (navigator.geolocation) {
+                watchId = navigator.geolocation.watchPosition(showPosition, showError, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 1000
+                });
+            } else {
+                status.textContent = '❌ GPS no soportado';
+            }
+        };
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const prec = position.coords.accuracy.toFixed(0);
+            
+            document.getElementById('lat').textContent = lat;
+            document.getElementById('lon').textContent = lon;
+            document.getElementById('prec').textContent = prec;
+            
+            status.style.display = 'none';
+            coords.style.display = 'block';
+            mapDiv.style.display = 'block';
+            
+            // Mapa en tiempo real
+            mapDiv.innerHTML = `<iframe width="100%" height="350" frameborder="0" 
+            src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.002},${lat-0.002},${lon+0.002},${lat+0.002}&layer=mapnik&marker=${lat},${lon}" 
+            style="border-radius: 15px;"></iframe>`;
+        }
+
+        function showError(error) {
+            status.textContent = '❌ ' + {
+                1: 'Permiso denegado. Toca "Permitir" en la barra superior',
+                2: 'GPS no disponible. Activa Ubicación Alta Precisión',
+                3: 'Timeout. Revisa conexión GPS/WiFi'
+            }[error.code] || 'Error desconocido';
+        }
+
+        function stopTracking() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+            coords.style.display = 'none';
+            mapDiv.style.display = 'none';
+            status.textContent = '⏹️ GPS detenido. Recarga para reiniciar';
+        }
+    </script>
+</body>
+</html>
