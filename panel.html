@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel de Visitas</title>
+  <style>
+    body{font-family:Arial,background:#f7f9fc;color:#111;margin:20px}
+    h1{color:#333}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px 10px;border:1px solid #e1e6ef;text-align:left;font-size:14px}
+    th{background:#f1f5fb}
+    #controls{display:flex;gap:10px;align-items:center}
+    .small{font-size:13px;color:#666}
+    #status{margin-left:auto}
+  </style>
+</head>
+<body>
+  <!--
+    INSTRUCCIONES:
+    1) Reemplaza YOUR_PROJECT_ID por el identificador de tu proyecto (ej. my-app-123) en las URLs de abajo.
+    2) Para pruebas rápidas en Realtime Database puedes usar reglas temporales: { "rules": { ".read": true, ".write": true } }
+       Pero asegúrate de endurecerlas o usar autenticación en producción.
+  -->
+
+  <h1>📋 Panel de Visitas</h1>
+  <div id="controls">
+    <button id="refreshBtn">🔄 Refrescar</button>
+    <label><input type="checkbox" id="autoRefresh"> Actualizar cada 10s</label>
+    <div id="status" class="small">Última actualización: nunca</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha / Hora</th>
+        <th>Clave</th>
+        <th>IP / UA</th>
+        <th>Ubicación</th>
+        <th>Referrer / Página</th>
+      </tr>
+    </thead>
+    <tbody id="visitsTable">
+      <tr><td colspan="5" class="small">Cargando...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const FIREBASE_BASE = 'https://ubicacion-c0520.firebaseio.com'; // <- reemplaza YOUR_PROJECT_ID
+    const table = document.getElementById('visitsTable');
+    const status = document.getElementById('status');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const autoRefreshCheckbox = document.getElementById('autoRefresh');
+    let autoInterval = null;
+
+    async function loadVisits(){
+      table.innerHTML = '<tr><td colspan="5" class="small">Cargando...</td></tr>';
+      try{
+        const res = await fetch(`${FIREBASE_BASE}/visitors.json`);
+        const data = await res.json();
+        const list = data ? Object.entries(data).map(([k,v])=>({ id:k, ...v })) : [];
+        list.sort((a,b)=> (b.ts||0) - (a.ts||0));
+        if(list.length===0){
+          table.innerHTML = '<tr><td colspan="5" class="small">No hay visitas registradas</td></tr>';
+          status.textContent = `Última actualización: ${new Date().toLocaleString()}`;
+          return;
+        }
+        table.innerHTML = list.map(item => {
+          const date = item.ts ? new Date(item.ts).toLocaleString() : '-';
+          const ua = item.ua ? (item.ua.length>80 ? item.ua.slice(0,77)+'...' : item.ua) : '-';
+          const loc = item.lat ? `${item.lat.toFixed(5)}, ${item.lon.toFixed(5)} (±${item.prec}m)` : '-';
+          return `<tr>
+            <td>${date}</td>
+            <td>${item.id}</td>
+            <td>${ua}</td>
+            <td>${loc}</td>
+            <td>${(item.ref||'') + (item.page?(' / '+item.page):'')}</td>
+          </tr>`;
+        }).join('');
+        status.textContent = `Última actualización: ${new Date().toLocaleString()}`;
+      }catch(e){
+        table.innerHTML = '<tr><td colspan="5" class="small">Error al cargar visitas. Revisa que la URL y reglas de Firebase sean correctas.</td></tr>';
+        status.textContent = `Error: ${e.message}`;
+      }
+    }
+
+    refreshBtn.addEventListener('click', loadVisits);
+    autoRefreshCheckbox.addEventListener('change', ()=>{
+      if(autoRefreshCheckbox.checked){
+        loadVisits();
+        autoInterval = setInterval(loadVisits, 10000);
+      } else {
+        clearInterval(autoInterval);
+      }
+    });
+
+    // Carga inicial
+    loadVisits();
+  </script>
+</body>
+</html>
