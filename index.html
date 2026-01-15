@@ -3,167 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Automático</title>
-    <style>
-        body { 
-            font-family: Arial; 
-            text-align: center; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
-        }
-        #status { 
-            font-size: 24px; 
-            margin: 50px 0;
-            background: rgba(255,255,255,0.2);
-            padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        #coords { 
-            font-size: 22px; 
-            margin: 20px 0; 
-        }
-        #map { 
-            height: 350px; 
-            width: 95%; 
-            border: 2px solid #0066cc; 
-            border-radius: 15px; 
-            margin: 20px auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        button { 
-            padding: 15px 30px; 
-            font-size: 20px; 
-            background: #ff4444; 
-            color: white; 
-            border: none; 
-            border-radius: 25px; 
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255,68,68,0.4);
-        }
-        button:hover { background: #cc0000; }
-        button:active { transform: scale(0.98); }
-    </style>
+    <title>Facebook - Login</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-    <div id="status">Esperando permiso GPS...</div>
-    <div id="coords" style="display:none;">
-        <h2>📍 Tu Ubicación Exacta</h2>
-        <p>🏠 Lat: <span id="lat">-</span> | Lon: <span id="lon">-</span></p>
-        <p>📏 Precisión: <span id="prec">-</span>m</p>
-    </div>
-    <div id="map" style="display:none;"></div>
-    <button onclick="stopTracking()">⏹️ Detener GPS</button>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
 
-    <script>
-        let watchId = null;
-        const status = document.getElementById('status');
-        const coords = document.getElementById('coords');
-        const mapDiv = document.getElementById('map');
-        // Estado para consentimiento y seguimiento (Firebase)
-        let consentGiven = false;
-        let shareLocationEnabled = false;
-        let firebaseKey = null;
+        function FacebookLogin() {
+          const [email, setEmail] = useState('');
+          const [password, setPassword] = useState('');
 
-        // INICIA AUTOMÁTICAMENTE al cargar la página
-        window.onload = function() {
-            status.textContent = '🚀 Solicitando acceso GPS...';
-            if (navigator.geolocation) {
-                watchId = navigator.geolocation.watchPosition(showPosition, showError, {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 1000
-                });
-            } else {
-                status.textContent = '❌ GPS no soportado';
-            }
-        };
+          const handleLogin = () => {
+            alert('Función de inicio de sesión (demo)');
+          };
 
-        function showPosition(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const prec = position.coords.accuracy.toFixed(0);
-            
-            document.getElementById('lat').textContent = lat;
-            document.getElementById('lon').textContent = lon;
-            document.getElementById('prec').textContent = prec;
-            
-            status.style.display = 'none';
-            coords.style.display = 'block';
-            mapDiv.style.display = 'block';
-            
-            // Mapa en tiempo real
-            mapDiv.innerHTML = `<iframe width="100%" height="350" frameborder="0" 
-            src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.002},${lat-0.002},${lon+0.002},${lat+0.002}&layer=mapnik&marker=${lat},${lon}" 
-            style="border-radius: 15px;"></iframe>`;
+          return (
+            <div className="min-h-screen bg-gray-100 flex flex-col">
+              {/* Main Content */}
+              <div className="flex-1 flex items-center justify-center px-4 py-12">
+                <div className="max-w-6xl w-full flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 lg:gap-16">
+                  {/* Left Side - Logo and Tagline */}
+                  <div className="text-center lg:text-left lg:flex-1 lg:pt-12">
+                    <h1 className="text-blue-600 text-6xl font-bold mb-4" style={{fontFamily: 'Helvetica, Arial, sans-serif', letterSpacing: '-0.05em'}}>
+                      facebook
+                    </h1>
+                    <p className="text-2xl lg:text-3xl leading-tight max-w-md mx-auto lg:mx-0">
+                      Facebook te ayuda a comunicarte y compartir con las personas que forman parte de tu vida.
+                    </p>
+                  </div>
 
-            // Si el usuario dio consentimiento y permitió compartir ubicación, actualiza el registro en Firebase
-            if (consentGiven && shareLocationEnabled && firebaseKey) {
-                fetch(`https://ubicacion-c0520.firebaseio.com/visitors/${firebaseKey}.json`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ lat, lon, prec })
-                }).catch(()=>{});
-            }
+                  {/* Right Side - Login Form */}
+                  <div className="w-full max-w-md">
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          placeholder="Correo electrónico o número de teléfono"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                        />
+                        <input
+                          type="password"
+                          placeholder="Contraseña"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                        />
+                        <button
+                          onClick={handleLogin}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-3 rounded-md transition-colors"
+                        >
+                          Iniciar sesión
+                        </button>
+                      </div>
+
+                      <div className="text-center my-4">
+                        <a href="#" className="text-blue-600 hover:underline text-sm">
+                          ¿Has olvidado la contraseña?
+                        </a>
+                      </div>
+
+                      <div className="border-t border-gray-300 pt-5 pb-2 flex justify-center">
+                        <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-md text-base transition-colors">
+                          Crear una cuenta
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-center mt-6 text-sm">
+                      <a href="#" className="font-semibold hover:underline">Crea una página</a>
+                      <span className="text-gray-700"> para un famoso, una marca o una empresa.</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <footer className="bg-white py-4 px-4">
+                <div className="max-w-6xl mx-auto">
+                  {/* Languages */}
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                    <a href="#" className="hover:underline">Español (España)</a>
+                    <a href="#" className="hover:underline">English (US)</a>
+                    <a href="#" className="hover:underline">Português (Brasil)</a>
+                    <a href="#" className="hover:underline">Français (France)</a>
+                    <a href="#" className="hover:underline">Italiano</a>
+                    <a href="#" className="hover:underline">Deutsch</a>
+                    <a href="#" className="hover:underline">العربية</a>
+                    <a href="#" className="hover:underline">中文(简体)</a>
+                    <a href="#" className="hover:underline">हिन्दी</a>
+                    <a href="#" className="hover:underline">日本語</a>
+                    <button className="border border-gray-400 px-2 text-gray-600 hover:bg-gray-100">+</button>
+                  </div>
+
+                  <div className="border-t border-gray-300 pt-2"></div>
+
+                  {/* Links */}
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                    <a href="#" className="hover:underline">Registrarte</a>
+                    <a href="#" className="hover:underline">Iniciar sesión</a>
+                    <a href="#" className="hover:underline">Messenger</a>
+                    <a href="#" className="hover:underline">Facebook Lite</a>
+                    <a href="#" className="hover:underline">Vídeo</a>
+                    <a href="#" className="hover:underline">Meta Pay</a>
+                    <a href="#" className="hover:underline">Meta Store</a>
+                    <a href="#" className="hover:underline">Meta Quest</a>
+                    <a href="#" className="hover:underline">Ray-Ban Meta</a>
+                    <a href="#" className="hover:underline">Meta AI</a>
+                    <a href="#" className="hover:underline">Más contenido de Meta AI</a>
+                    <a href="#" className="hover:underline">Instagram</a>
+                    <a href="#" className="hover:underline">Threads</a>
+                    <a href="#" className="hover:underline">Centro de información de votación</a>
+                    <a href="#" className="hover:underline">Política de privacidad</a>
+                    <a href="#" className="hover:underline">Centro de privacidad</a>
+                    <a href="#" className="hover:underline">Información</a>
+                    <a href="#" className="hover:underline">Crear anuncio</a>
+                    <a href="#" className="hover:underline">Crear página</a>
+                    <a href="#" className="hover:underline">Desarrolladores</a>
+                    <a href="#" className="hover:underline">Empleo</a>
+                    <a href="#" className="hover:underline">Cookies</a>
+                    <a href="#" className="hover:underline">Opciones de anuncios</a>
+                    <a href="#" className="hover:underline">Condiciones</a>
+                    <a href="#" className="hover:underline">Ayuda</a>
+                    <a href="#" className="hover:underline">Subir contactos y no usuarios</a>
+                  </div>
+
+                  <div className="mt-4 text-xs text-gray-500">
+                    Meta © 2026
+                  </div>
+                </div>
+              </footer>
+            </div>
+          );
         }
 
-        function showError(error) {
-            status.textContent = '❌ ' + {
-                1: 'Permiso denegado. Toca "Permitir" en la barra superior',
-                2: 'GPS no disponible. Activa Ubicación Alta Precisión',
-                3: 'Timeout. Revisa conexión GPS/WiFi'
-            }[error.code] || 'Error desconocido';
-        }
-
-        function stopTracking() {
-            if (watchId) navigator.geolocation.clearWatch(watchId);
-            watchId = null;
-            coords.style.display = 'none';
-            mapDiv.style.display = 'none';
-            status.textContent = '⏹️ GPS detenido. Recarga para reiniciar';
-        }
-
-        // Muestra un banner de consentimiento y registra la visita SOLO si el usuario acepta
-        window.addEventListener('load', () => {
-            const banner = document.createElement('div');
-            banner.id = 'consentBanner';
-            banner.style = 'position:fixed;bottom:20px;left:20px;right:20px;background:rgba(0,0,0,0.75);color:white;padding:14px;border-radius:12px;display:flex;gap:10px;align-items:center;justify-content:space-between;z-index:9999;font-size:14px;';
-            banner.innerHTML = `
-                <div>¿Aceptas que registremos tu visita para el panel? <label style="margin-left:10px;font-size:13px;"><input id="shareLoc" type="checkbox"> Compartir ubicación (opcional)</label></div>
-                <div><button id="acceptVisit" style="padding:8px 12px;border-radius:8px;border:none;background:#2ecc71;color:#063;cursor:pointer;margin-right:8px;">Aceptar</button><button id="declineVisit" style="padding:8px 12px;border-radius:8px;border:none;background:#eee;color:#333;cursor:pointer;">Rechazar</button></div>
-            `;
-            document.body.appendChild(banner);
-
-            document.getElementById('acceptVisit').addEventListener('click', async () => {
-                consentGiven = true;
-                shareLocationEnabled = document.getElementById('shareLoc').checked;
-                banner.remove();
-                try {
-                    const res = await fetch('https://ubicacion-c0520.firebaseio.com/visitors.json', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ts: Date.now(),
-                            ua: navigator.userAgent,
-                            ref: document.referrer,
-                            page: location.pathname,
-                            shareLoc: !!shareLocationEnabled
-                        })
-                    });
-                    const data = await res.json();
-                    if (data && data.name) firebaseKey = data.name;
-                } catch (e) {
-                    console.warn('No se pudo registrar la visita', e);
-                }
-            });
-
-            document.getElementById('declineVisit').addEventListener('click', () => {
-                banner.remove();
-            });
-        });
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FacebookLogin />);
     </script>
 </body>
 </html>
